@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.List;
+
 public class SimulationManager implements Runnable
 {
     //data read from ui

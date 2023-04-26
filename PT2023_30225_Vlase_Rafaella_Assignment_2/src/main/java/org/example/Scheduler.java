@@ -1,6 +1,7 @@
 package org.example;
 
-import java.awt.*;
+import java.util.*;
+import java.util.ArrayList;
 
 public class Scheduler
 {
@@ -11,7 +12,16 @@ public class Scheduler
 
     public Scheduler(int maxNoServers, int maxTasksPerServer)
     {
+        this.maxNoServers = maxNoServers;
+        this.maxTasksPerServer = maxTasksPerServer;
+        this.servers = new ArrayList<>();
 
+        for (int i = 0; i < maxNoServers; i++) {
+            Server server = new Server();
+            Thread thread = new Thread(server);
+            thread.start();
+            servers.add(server);
+        }
     }
 
     public void changeStrategy(SelectionPolicy policy)
@@ -24,7 +34,8 @@ public class Scheduler
 
     public void dispatchTask(Task t)
     {
-
+        // call the strategy addTask method
+        strategy.addTask(servers, t);
     }
 
     public List<Server> getServers()
