@@ -1,19 +1,19 @@
 package org.example;
 import java.util.*;
 
-public class ConcreteStrategyTime implements Strategy
+public class ConcreteStrategyQueue implements Strategy
 {
     @Override
     public void addTask(List<Server> servers, Task t)
     {
-        int minWaitingPeriod = servers.get(0).getWaitingPeriod();
+        int minQueueSize = servers.get(0).getTasks().size();
         Server minServer = servers.get(0);
         for (Server server : servers)
         {
-            if (minWaitingPeriod > server.getWaitingPeriod())
+            if (minQueueSize > server.getTasks().size())
             {
                 minServer = server;
-                minWaitingPeriod = server.getWaitingPeriod();
+                minQueueSize = server.getTasks().size();
             }
         }
         minServer.addTask(t);
