@@ -6,13 +6,17 @@ public class Task implements Comparable<Task>
     int serviceTime;
     private int ID;
 
-    public Task()
+    public Task(int ID, int serviceTime, int arrivalTime)
     {
-        ID = 0;
-        arrivalTime = 0;
-        serviceTime = 0;
+        this.ID = 0;
+        this.arrivalTime = 0;
+        this.serviceTime = 0;
     }
 
+    public int getArrivalTime()
+    {
+        return arrivalTime;
+    }
     @Override
     public int compareTo(Task task)
     {

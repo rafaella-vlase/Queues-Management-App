@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -7,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Server implements Runnable
 {
     private BlockingQueue<Task> tasks;
-    private AtomicInteger waitingPeriod;
+    AtomicInteger waitingPeriod;
 
     public Server(LinkedBlockingQueue<Task> tasks, AtomicInteger waitingPeriod)
     {
@@ -26,8 +28,10 @@ public class Server implements Runnable
         waitingPeriod.addAndGet(newTask.serviceTime);
     }
 
-    public void run() {
-        while (true) {
+    public void run()
+    {
+        while (true)
+        {
             try {
                 // Sleep for 1 second to simulate the passage of time
                 Thread.sleep(1000);
@@ -38,7 +42,8 @@ public class Server implements Runnable
             }
 
             // If there are no tasks in the queue, continue the loop
-            if (tasks.isEmpty()) {
+            if (tasks.isEmpty())
+            {
                 continue;
             }
 
@@ -50,7 +55,8 @@ public class Server implements Runnable
             waitingPeriod.getAndDecrement();
 
             // If the task's processing time has reached 0, remove it from the queue
-            if (nextTask.serviceTime == 0) {
+            if (nextTask.serviceTime == 0)
+            {
                 try {
                     tasks.take();
                 } catch (InterruptedException e) {
@@ -61,11 +67,11 @@ public class Server implements Runnable
             }
         }
     }
-    public Task[] getTasks()
+    public List<Task> getTasks()
     {
-        Task[] taskArray = new Task[tasks.size()];
-        tasks.toArray(taskArray);
-        return taskArray;
+        List<Task> taskList = new ArrayList<>(tasks.size());
+        taskList.addAll(tasks);
+        return taskList;
     }
 
 }

@@ -16,7 +16,8 @@ public class Scheduler
         this.maxTasksPerServer = maxTasksPerServer;
         this.servers = new ArrayList<>();
 
-        for (int i = 0; i < maxNoServers; i++) {
+        for (int i = 0; i < maxNoServers; i++)
+        {
             Server server = new Server();
             Thread thread = new Thread(server);
             thread.start();
@@ -32,7 +33,7 @@ public class Scheduler
             strategy = new ConcreteStrategyTime();
     }
 
-    public void dispatchTask(Task t)
+    public void dispatchTask(Task t) throws InterruptedException
     {
         // call the strategy addTask method
         strategy.addTask(servers, t);

@@ -4,17 +4,19 @@ import java.util.*;
 public class ConcreteStrategyQueue implements Strategy
 {
     @Override
-    public void addTask(List<Server> servers, Task t) throws InterruptedException {
-        int minQueueSize = servers.get(0).getTasks().size();
-        Server minServer = servers.get(0);
-        for (Server server : servers)
-        {
-            if (minQueueSize > server.getTasks().size())
-            {
+    public void addTask(List<Server> servers, Task t) throws InterruptedException
+    {
+        int minQueueSize = Integer.MAX_VALUE;
+        Server minServer = null;
+        for (Server server : servers) {
+            int queueSize = server.getTasks().size();
+            if (queueSize < minQueueSize) {
                 minServer = server;
-                minQueueSize = server.getTasks().size();
+                minQueueSize = queueSize;
             }
         }
-        minServer.addTask(t);
+        if (minServer != null) {
+            minServer.addTask(t);
+        }
     }
 }
