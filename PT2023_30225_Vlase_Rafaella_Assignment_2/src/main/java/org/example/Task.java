@@ -2,30 +2,26 @@ package org.example;
 
 public class Task implements Comparable<Task>
 {
-    private int arrivalTime;
-    int serviceTime;
-    private int ID;
+    int ID;
+    int arrivalTime;
+    int processingTime;
 
-    public Task(int ID, int serviceTime, int arrivalTime)
+    Task()
     {
-        this.ID = 0;
-        this.arrivalTime = 0;
-        this.serviceTime = 0;
+        ID = 0;
+        arrivalTime = 0;
+        processingTime = 0;
     }
 
-    public int getArrivalTime()
-    {
-        return arrivalTime;
-    }
     @Override
     public int compareTo(Task task)
     {
-        return arrivalTime - task.serviceTime;
+        return arrivalTime - task.arrivalTime;
     }
 
     @Override
     public String toString()
     {
-        return "(" + ID + ", " + arrivalTime + ", " + serviceTime + ")";
+        return "(" + ID + ", " + arrivalTime + ", " + processingTime + ")";
     }
 }

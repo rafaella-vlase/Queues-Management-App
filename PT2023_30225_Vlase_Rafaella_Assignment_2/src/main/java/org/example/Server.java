@@ -1,77 +1,67 @@
 package org.example;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Server implements Runnable
 {
-    private BlockingQueue<Task> tasks;
+    BlockingQueue<Task> tasks;
     AtomicInteger waitingPeriod;
 
-    public Server(LinkedBlockingQueue<Task> tasks, AtomicInteger waitingPeriod)
+    Server()
     {
-        this.tasks = tasks;
-        this.waitingPeriod = waitingPeriod;
+        // initialize queue and waitingPeriod
+        tasks = new LinkedBlockingQueue<>();
+        waitingPeriod = new AtomicInteger(0);
     }
 
-    public Server()
+    void addTask(Task newTask)
     {
-        this(new LinkedBlockingQueue<>(), new AtomicInteger(0));
+        // add task to queue
+        // increment the waitingPeriod
+        try{
+            tasks.put(newTask);
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        waitingPeriod.set(waitingPeriod.intValue() + newTask.processingTime);
     }
 
-    void addTask(Task newTask) throws InterruptedException
-    {
-        tasks.put(newTask);
-        waitingPeriod.addAndGet(newTask.serviceTime);
-    }
-
+    @Override
     public void run()
     {
-        while (true)
+        // take next task from queue
+        // stop the thread for a time equal with the task's processing time
+        // decrement the waitingPeriod
+        while(true)
         {
             try {
-                // Sleep for 1 second to simulate the passage of time
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                // If an exception occurs, print the stack trace and continue the loop
                 e.printStackTrace();
-                continue;
             }
-
-            // If there are no tasks in the queue, continue the loop
-            if (tasks.isEmpty())
+            if(!tasks.isEmpty())
             {
-                continue;
-            }
-
-            // Get the next task from the queue and decrement its processing time
-            Task nextTask = tasks.element();
-            nextTask.serviceTime--;
-
-            // Decrement the waiting period by 1
-            waitingPeriod.getAndDecrement();
-
-            // If the task's processing time has reached 0, remove it from the queue
-            if (nextTask.serviceTime == 0)
-            {
-                try {
-                    tasks.take();
-                } catch (InterruptedException e) {
-                    // If an exception occurs, print the stack trace and continue the loop
-                    e.printStackTrace();
-                    continue;
+                tasks.element().processingTime--;
+                waitingPeriod.set(waitingPeriod.decrementAndGet());
+                if(tasks.element().processingTime == 0)
+                {
+                    try {
+                        tasks.take();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
-    public List<Task> getTasks()
-    {
-        List<Task> taskList = new ArrayList<>(tasks.size());
-        taskList.addAll(tasks);
-        return taskList;
-    }
 
+    @Override
+    public String toString()
+    {
+        String string = "";
+        for(Task task : tasks)
+            string = string + task.toString() + " ";
+        return string;
+    }
 }

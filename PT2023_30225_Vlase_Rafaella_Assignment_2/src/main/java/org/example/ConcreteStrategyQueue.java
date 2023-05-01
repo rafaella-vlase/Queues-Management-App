@@ -1,22 +1,22 @@
 package org.example;
-import java.util.*;
+import java.util.ArrayList;
 
 public class ConcreteStrategyQueue implements Strategy
 {
+    // adds a task to the server with the shortest queue
     @Override
-    public void addTask(List<Server> servers, Task t) throws InterruptedException
+    public void addTask(ArrayList<Server> servers, Task t)
     {
-        int minQueueSize = Integer.MAX_VALUE;
-        Server minServer = null;
+        int minQueueSize = servers.get(0).tasks.size(); // start with the first server s queue size
+        Server minServer = servers.get(0); // start with the first server
         for (Server server : servers) {
-            int queueSize = server.getTasks().size();
-            if (queueSize < minQueueSize) {
+            if (minQueueSize > server.tasks.size()) {
+                // if a server has a shorter queue, update minQueueSize and minServer
                 minServer = server;
-                minQueueSize = queueSize;
+                minQueueSize = server.tasks.size();
             }
         }
-        if (minServer != null) {
-            minServer.addTask(t);
-        }
+        // add the task to the server with the shortest queue
+        minServer.addTask(t);
     }
 }

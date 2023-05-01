@@ -1,8 +1,7 @@
 package org.example;
-
-import java.util.*;
+import java.util.ArrayList;
 
 public interface Strategy
 {
-    public void addTask(List<Server> servers, Task t) throws InterruptedException;
+    void addTask(ArrayList<Server> servers, Task t);
 }
